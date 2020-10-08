@@ -6,8 +6,6 @@ namespace Moore_s_Law
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Math.Log(100,2));
-            // <!important> Dupa 10.5 ani vom avea o putere de calcul de 100 de ori mai mare  </important>
             string s;
             Console.WriteLine("Introduceti un numar n pentru a afla in cati ani vom avea o putere de calcul de n ori mai mare fate de cat avem in acest moment:");
             s = Console.ReadLine();
