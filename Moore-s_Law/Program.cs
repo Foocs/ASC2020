@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Moore_s_Law
-{
+{   
     class Program
     {
         static void Main(string[] args)
         {
+            // <!important> Dupa 7 ani vom avea o putere de calcul de 100 de ori mai mare  </important>
             string s;
             Console.WriteLine("Introduceti un numar n pentru a afla in cati ani vom avea o putere de calcul de n ori mai mare fate de cat avem in acest moment:");
             s = Console.ReadLine();
@@ -21,7 +22,7 @@ namespace Moore_s_Law
                     double x;
                     n = int.Parse(s);
                     x = Math.Log(n) * 1.5d;
-                    x = Math.Round(x);
+                    //x = Math.Round(x);
                     Console.WriteLine($"Dupa aproximativ {x} ani vom avea o putere de calcul de {n} ori mai mare la acelasi pret.");
                 }
                 catch (FormatException e)
