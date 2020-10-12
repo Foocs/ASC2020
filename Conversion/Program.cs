@@ -61,9 +61,9 @@ namespace Conversion
 
                     #region Custom Exception Handling
 
-                    foreach (char c in nr)
-                        if (!((c >= '0' && c <= Convert.ToChar(bazaOriginala)) || (c >= 'A' && c <= 'A' + Convert.ToChar(bazaOriginala) - 10))) // verificam daca numarul este conform bazei originale
-                            throw new Exception("Numerele pot avea doar cifre sau litere mai mici ca baza originala");
+                 //   foreach (char c in nr)
+                 //       if (!((c >= '0' && c <= Convert.ToChar(bazaOriginala)) || (c >= 'A' && c <= 'A' + Convert.ToChar(bazaOriginala) - 10))) // verificam daca numarul este conform bazei originale
+                //            throw new Exception("Numerele pot avea doar cifre sau litere mai mici ca baza originala");
 
                     if ((bazaOriginala < 2 || bazaOriginala > 16) || (bazaTinta < 2 || bazaTinta > 16))
                         throw new Exception("Baza poate fi doar un numar intre 2 si 16");
@@ -74,7 +74,7 @@ namespace Conversion
                     Console.WriteLine($"\n      Numarul {nr} din baza {bazaOriginala} este egal cu {convertFromBase10(convertToBase10(nr, bazaOriginala), bazaTinta)} in baza {bazaTinta}.\n");
                 }
 
-                catch (FormatException e)
+                catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
                 }
