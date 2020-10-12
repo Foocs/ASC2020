@@ -4,35 +4,74 @@ namespace Conversion
 {
     class Program
     {
-        static string conversionFromBase10(int nr, int baza)
+        #region Functions
+        static string convertFromBase10(int nr, int bazaTinta)
         {
             if (nr != 0)
             {
-                if (nr%baza > 9)
-                    return conversionFromBase10(nr / baza, baza)+ Convert.ToString(Convert.ToChar((nr % baza) % 10 + 'A'));
-                return conversionFromBase10(nr / baza, baza)+ nr % baza;
+                if (nr % bazaTinta > 9)
+                    return convertFromBase10(nr / bazaTinta, bazaTinta) + Convert.ToString(Convert.ToChar((nr % bazaTinta) % 10 + 'A'));
+                return convertFromBase10(nr / bazaTinta, bazaTinta) + nr % bazaTinta;
             }
             return "";
         }
+
+        static int convertToBase10(string nr, int bazaOriginala, int index = 0)
+        {
+            if (index < nr.Length)
+            {
+                if (nr[nr.Length - index - 1] >= '0' && nr[nr.Length - index - 1] <= '9')
+                    return convertToBase10(nr, bazaOriginala, index + 1) + (nr[nr.Length - index - 1] - '0') * (int)Math.Pow(bazaOriginala, index);
+                return convertToBase10(nr, bazaOriginala, index + 1) + (nr[nr.Length - index - 1] - 'A' + 10) * (int)Math.Pow(bazaOriginala, index);
+            }
+            return 0;
+        }
+
+        #endregion
         static void Main(string[] args)
         {
-            Console.WriteLine("+---------------------------------------------------------+");
-            Console.WriteLine("|---Converteste un numar din baza 10 in orice alta baza---|");
-            Console.WriteLine("+---------------------------------------------------------+");
+            #region Intro
 
+            Console.WriteLine("\n\n\n");
+            Console.WriteLine("      +----------------------------------------+");
+            Console.WriteLine("      |                                        |");
+            Console.WriteLine("      |   Converteste un numar in orice baza   |");
+            Console.WriteLine("      |                                        |");
+            Console.WriteLine("      +----------------------------------------+");
+            Console.WriteLine();
+
+
+            #endregion
+
+            //TODO Numere reale
+
+            #region Driver Code
             while (true)
             {
                 try
                 {
-                    Console.Write("\nIntroduceti numarul in baza 10: ");
-                    int nr = int.Parse(Console.ReadLine());
+                    Console.Write("\n      Introduceti numarul: ");
+                    string nr = Console.ReadLine().ToUpper();
 
-                    Console.Write("\nIntroduceti baza tinta (intre 2 si 16): ");
-                    int baza = int.Parse(Console.ReadLine());
-                    if (baza < 2 || baza > 16)
-                        throw new IndexOutOfRangeException();
+                    Console.Write("      Introduceti baza numarului: ");
+                    int bazaOriginala = int.Parse(Console.ReadLine());
 
-                    Console.WriteLine($"\nNumarul {nr} din baza 10 este egal cu {conversionFromBase10(nr, baza)} in baza {baza}.\n");
+                    Console.Write("      Introduceti baza tinta: ");
+                    int bazaTinta = int.Parse(Console.ReadLine());
+
+                    #region Custom Exception Handling
+
+                    foreach (char c in nr)
+                        if (!((c >= '0' && c <= Convert.ToChar(bazaOriginala)) || (c >= 'A' && c <= 'F')))
+                            throw new Exception("Numerele pot avea doar cifre mai mici ca baza originala sau litere de la A la F");
+
+                    if ((bazaOriginala < 2 || bazaOriginala > 16) || (bazaTinta < 2 || bazaTinta > 16))
+                        throw new Exception("Baza poate fi doar un numar intre 2 si 16");
+
+                    #endregion
+
+                    Console.WriteLine(convertToBase10(nr, bazaOriginala));
+                    Console.WriteLine($"\n      Numarul {nr} din baza {bazaOriginala} este egal cu {convertFromBase10(convertToBase10(nr, bazaOriginala), bazaTinta)} in baza {bazaTinta}.\n");
                 }
 
                 catch (FormatException e)
@@ -42,9 +81,10 @@ namespace Conversion
 
                 finally
                 {
-                    Console.WriteLine("\n----Incearca din nou----");
+                    Console.WriteLine("\n      ----Incearca din nou----");
                 }
             }
+            #endregion
         }
     }
 }
