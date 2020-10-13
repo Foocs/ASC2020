@@ -10,7 +10,8 @@ namespace Conversion
             if (nr != 0)
             {
                 if (nr % bazaTinta > 9)
-                    return convertFromBase10(nr / bazaTinta, bazaTinta) + Convert.ToString(Convert.ToChar((nr % bazaTinta) % 10 + 'A')); // convertirea in litere
+                    return convertFromBase10(nr / bazaTinta, bazaTinta) + 
+                        Convert.ToString(Convert.ToChar((nr % bazaTinta) % 10 + 'A')); // convertirea in litere
                 return convertFromBase10(nr / bazaTinta, bazaTinta) + nr % bazaTinta;                                                   // convertirea in numere
             }
             return "";
@@ -21,8 +22,10 @@ namespace Conversion
             if (index < nr.Length)
             {
                 if (nr[nr.Length - index - 1] >= '0' && nr[nr.Length - index - 1] <= '9')
-                    return convertToBase10(nr, bazaOriginala, index + 1) + (nr[nr.Length - index - 1] - '0') * (int)Math.Pow(bazaOriginala, index); // convertirea din cifre
-                return convertToBase10(nr, bazaOriginala, index + 1) + (nr[nr.Length - index - 1] - 'A' + 10) * (int)Math.Pow(bazaOriginala, index); // convertirea din litere
+                    return convertToBase10(nr, bazaOriginala, index + 1) + 
+                        (nr[nr.Length - index - 1] - '0') * (int)Math.Pow(bazaOriginala, index); // convertirea din cifre
+                return convertToBase10(nr, bazaOriginala, index + 1) + 
+                    (nr[nr.Length - index - 1] - 'A' + 10) * (int)Math.Pow(bazaOriginala, index); // convertirea din litere
             }
             return 0;
         }
@@ -32,7 +35,7 @@ namespace Conversion
         {
             #region Intro
 
-            Console.WriteLine("\n\n\n");
+            Console.WriteLine("\n");
             Console.WriteLine("      +----------------------------------------+");
             Console.WriteLine("      |                                        |");
             Console.WriteLine("      |   Converteste un numar in orice baza   |");
@@ -46,6 +49,7 @@ namespace Conversion
             //TODO Numere reale
 
             #region Driver Code
+
             while (true)
             {
                 try
@@ -61,12 +65,13 @@ namespace Conversion
 
                     #region Custom Exception Handling
 
-                 //   foreach (char c in nr)
-                 //       if (!((c >= '0' && c <= Convert.ToChar(bazaOriginala)) || (c >= 'A' && c <= 'A' + Convert.ToChar(bazaOriginala) - 10))) // verificam daca numarul este conform bazei originale
-                //            throw new Exception("Numerele pot avea doar cifre sau litere mai mici ca baza originala");
+                    foreach (char c in nr)
+                        if (!(((c >= '0' && c <= '0' + Convert.ToChar(bazaOriginala)) && (bazaOriginala <= 10))||
+                              ((c >= 'A' && c <= 'A' + Convert.ToChar(bazaOriginala) - 10) && (bazaOriginala > 10)))) // verificam daca numarul este conform bazei originale
+                            throw new Exception("      Numerele pot avea doar cifre sau litere mai mici ca baza originala");
 
                     if ((bazaOriginala < 2 || bazaOriginala > 16) || (bazaTinta < 2 || bazaTinta > 16))
-                        throw new Exception("Baza poate fi doar un numar intre 2 si 16");
+                        throw new Exception("      Baza poate fi doar un numar intre 2 si 16");
 
                     #endregion
 
@@ -76,7 +81,7 @@ namespace Conversion
 
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine("      "+ e.Message);
                 }
 
                 finally
