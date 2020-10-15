@@ -95,8 +95,8 @@ namespace Conversion
                     #region Custom Exception Handling
 
                     foreach (char c in nr)
-                        if (!(((c >= '0' && c < '0' + Convert.ToChar(bazaOriginala)) && (bazaOriginala <= 10)) ||
-                              ((c >= 'A' && c <= 'A' + Convert.ToChar(bazaOriginala) - 10) && (bazaOriginala > 10)))) // verificam daca numarul este conform bazei originale (daca este corect)
+                        if (!((c >= '0' && c <= '0' + Convert.ToChar(bazaOriginala)) ||
+                             ((c >= 'A' && c <= 'A' + Convert.ToChar(bazaOriginala) - 10) && (bazaOriginala > 10 && bazaOriginala <= 16)))) // verificam daca numarul este conform bazei originale (daca este corect)
                             throw new Exception("\n      ERROR: Numerele pot avea doar cifre sau litere mai mici ca baza originala");
 
                     if ((bazaOriginala < 2 || bazaOriginala > 16) || (bazaTinta < 2 || bazaTinta > 16))
