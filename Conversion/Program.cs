@@ -96,16 +96,17 @@ namespace Conversion
 
                     foreach (char c in nr)
                     {
-                        if (!((c >= '0' && c <= '9' && bazaOriginala >= 2 && bazaOriginala <= 10) ||
-                              (c >= 'A' && c <= 'Z' && bazaOriginala > 10)))  // verificam daca numarul este format din litere si cifre
-                            throw new Exception("\n      Numarul poate avea doar litere si cifre.");
+                        if (!((c >= '0' && c <= '9') ||
+                              (c >= 'A' && c <= 'Z')))    // verificam daca numarul este format din litere si/sau cifre
+                            throw new Exception("\n      Numarul poate avea doar litere si/sau cifre.");
+
                         if (!((c <= '0' + Convert.ToChar(bazaOriginala)) ||
-                             ((c <= 'A' + Convert.ToChar(bazaOriginala) - 10)))) // verificam daca numarul este conform bazei originale (daca este corect)
+                             ((c <= 'A' + Convert.ToChar(bazaOriginala) - 10))))     // verificam daca numarul este conform bazei originale (daca este corect)
                             throw new Exception("\n      ERROR: Numerele pot avea doar litere sau/si cifre mai mici ca baza originala.");
                     }
 
-                    if ((bazaOriginala < 2 || bazaOriginala > 32) || (bazaTinta < 2 || bazaTinta >32))
-                        throw new Exception("\n      Baza poate fi doar un numar intre 2 si 32.");
+                    if ((bazaOriginala < 2 || bazaOriginala > 36) || (bazaTinta < 2 || bazaTinta > 36))
+                        throw new Exception("\n      Baza poate fi doar un numar intre 2 si 36.");
 
                     #endregion
 
@@ -113,8 +114,8 @@ namespace Conversion
                     double nrBaza10 = convertToBase10(nr, bazaOriginala, nrZecimale); // * Math.Pow(bazaTinta, 16); // inmultim pentru a trata cifrele zecimale, afiseaza 16 cifre zecimale
                     string nrBazaNoua = (int)nrBaza10 != 0 ? convertFromBase10Whole((int)Math.Floor(nrBaza10), bazaTinta) : "0"; // convertim partea intreaga in baza noua, 
                                                                                                                                  //atasam "0" pentru ca pt [0.x] functia nu returneza nimic
-
-                    nrBazaNoua += "." + convertFromBase10Decimal(nrBaza10 - Math.Floor(nrBaza10), bazaTinta); // adaugam zecimalele
+                    if (nrZecimale > 0)
+                        nrBazaNoua += "." + convertFromBase10Decimal(nrBaza10 - Math.Floor(nrBaza10), bazaTinta); // adaugam zecimalele
 
                     nrBazaNoua = (minus ? "-" : "") + nrBazaNoua; // adaugam minusul (daca este cazul)
 
