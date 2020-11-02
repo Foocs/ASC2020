@@ -31,9 +31,9 @@ namespace Hexviewer
 
                     while (file.Read(byteBlock, 0, nrOcteti) > 0)    // citim 16 caractere ca si bytes pana cand nu mai exista nimic in fisier
                     {
-                        string hex = BitConverter.ToString(byteBlock);  // convertim byte-ul in caractere hexazecimale
+                        string hex = BitConverter.ToString(byteBlock);  // convertim secventa de byte intr-un sir hexazecimal
 
-                        hex = hex.Replace("-", " ");  // bitconverter separa fiecare bit prin '-', iar noi il eliminam pentru lizibilitate
+                        hex = hex.Replace("-", " ");  // bitconverter separa fiecare byte prin '-', iar noi eliminam '-' pentru lizibilitate
 
                         string text = "";
                         for (int i = 0; i < byteBlock.Length; i++)
