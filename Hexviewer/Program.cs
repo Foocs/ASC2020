@@ -44,7 +44,7 @@ namespace Hexviewer
 
                         string text = "";           // string-ul care va contine ce caractere contine defapt textul
                         for (int i = 0; i < actual; i++)
-                            text += byteBlock[i] < ' ' ? "." : ((char)byteBlock[i]).ToString();
+                            text += byteBlock[i] < ' ' || byteBlock[i] == 127 ? "." : ((char)byteBlock[i]).ToString();
                         // transformam fiecare byte in caracter iar caracterele speciale (ex. carriage return, newline) (daca exista) in '.'
 
                         Console.WriteLine($" {idx:X8} : {hex.PadRight(nrOcteti * 3 - 1)}  | {text}");     // afisam un rand
