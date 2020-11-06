@@ -26,7 +26,7 @@ namespace Hexviewer
                     path = path.Trim(caractereDeEliminat);  // eliminam caracterele speciale de la inceputul si sfarsitul caii (path-ului)
 
 
-                    if (File.Exists(path))
+                    if (!File.Exists(path))
                         throw new FileNotFoundException("Path gresit.");
 
                     FileStream file = new FileStream(path, FileMode.Open); // variabila prin care vom putea citi din fisier
