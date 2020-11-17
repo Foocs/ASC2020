@@ -12,7 +12,7 @@ namespace Vending_Machine
 
             public Context(State state)
             {
-                this.TransitionTo(state);
+                TransitionTo(state);
             }
 
             public void TransitionTo(State state)
@@ -24,26 +24,26 @@ namespace Vending_Machine
 
                 Console.ResetColor();
 
-                this._state = state;
-                this._state.SetContext(this);
+                _state = state;
+                _state.SetContext(this);
                 Input(this);
             }
             public void NickelRequest()
             {
                 balance += 5;
-                this._state.NickelHandle();
+                _state.NickelHandle();
             }
 
             public void DimeRequest()
             {
                 balance += 10;
-                this._state.DimeHandle();
+                _state.DimeHandle();
             }
 
             public void QuarterRequest()
             {
                 balance += 25;
-                this._state.QuarterHandle();
+                _state.QuarterHandle();
             }
         }
 
@@ -235,8 +235,6 @@ namespace Vending_Machine
 
                 Console.ResetColor();
                 var context = new Context(new ConcreteStateA());
-
-                Input(context);
             }
 
             catch (Exception e)
