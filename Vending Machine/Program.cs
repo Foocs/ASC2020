@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Vending_Machine
 {
     class Program
     {
         #region Context
-        
+
         class Context
         {
             private State _state = null;
@@ -197,18 +198,15 @@ namespace Vending_Machine
 
             Console.WriteLine();
 
-            switch (coinType)
-            {
-                case 'N':
-                    context.NickelRequest();
-                    break;
-                case 'D':
-                    context.DimeRequest();
-                    break;
-                case 'Q':
-                    context.QuarterRequest();
-                    break;
-            }
+            Dictionary<char, Action> requests = new Dictionary<char, Action>()
+                {
+
+                {'N', () => context.NickelRequest()},
+                {'D', () => context.DimeRequest()},
+                {'Q', () => context.QuarterRequest()},
+            };
+
+            requests[coinType]();
         }
         #endregion
 
