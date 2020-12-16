@@ -1,0 +1,17 @@
+(ARCTools Version 2.1.2)
+ HexLoc     DecLoc    MachWord   Label        Instruction                Comment
+                                              .org 2048                  
+00000800  0000002048  c2002814  prog1:        ld [2068], %r1             ! Load x into %r1
+00000804  0000002052  c4002818                ld [2072], %r2             ! Load y into %r2
+00000808  0000002056  86804002                addcc %r1, %r2, %r3        ! %r3 = %r1 + %r2
+0000080c  0000002060  c620281c                st %r3, [2076]             ! Store %r3 into z
+00000810  0000002064  81c3e004                jmpl %r15, 4, %r0          ! Return
+00000814  0000002068  0000000f  x:                                       
+00000818  0000002072  00000009  y:                                       
+0000081c  0000002076  00000000  z:                                       
+
+--- Symbol Table ---
+x: 2068
+z: 2076
+prog1: 2048
+y: 2072
