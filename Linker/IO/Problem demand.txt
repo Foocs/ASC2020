@@ -31,14 +31,14 @@ Cerinte suplimentare:
 
 Programul trebuie sa verifice si situatii eronate cum ar fi:
 
-daca un simbol este definit dar nu este utilizat de nici un modul, se va afisa un mesaj de avertizare (warning) si se va continua procesul de link-editare. 
-daca un simbol este definit de mai multe ori, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv prima definitie 
-daca un simbol este utilizat dar nu este definit, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv valoare 0 (zero). 
-daca sunt mai multe simboluri utilizate de aceeasi instructiune, se va afisa un mesaj de eroare si se vor ignora toate utilizarile in afara de ultima. 
-daca o adresa ce apare in definitia unui simbol depaseste dimensiunea modulului, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv adresa relativa 0 (zero). 
-daca o valoare imediata (de tip 1) apare intr-o lista de utilizare, se va afisa un mesaj de eroare si se va trata adresa ca o adresa externa (de tip 4). 
-daca o adrea externa nu este pe o lista de utilizare, se va afisa un mesaj de eroare si va fi tratata ca o adreas imediata. (!!!)
-daca o adresa absoluta depaseste dimensiunea masinii, se va afisa un mesaj de eroare si se va folosi in locul acelei adrese cea mai mare valoare posibila  (care este 199). 
+1. daca un simbol este definit dar nu este utilizat de nici un modul, se va afisa un mesaj de avertizare (warning) si se va continua procesul de link-editare. 
+2. daca un simbol este definit de mai multe ori, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv prima definitie 
+3. daca un simbol este utilizat dar nu este definit, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv valoare 0 (zero). 
+4. daca sunt mai multe simboluri utilizate de aceeasi instructiune, se va afisa un mesaj de eroare si se vor ignora toate utilizarile in afara de ultima. 
+5. daca o adresa ce apare in definitia unui simbol depaseste dimensiunea modulului, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv adresa relativa 0 (zero). 
+6. daca o valoare imediata (de tip 1) apare intr-o lista de utilizare, se va afisa un mesaj de eroare si se va trata adresa ca o adresa externa (de tip 4). 
+7. daca o adrea externa nu este pe o lista de utilizare, se va afisa un mesaj de eroare si va fi tratata ca o adreas imediata. (!!!)
+8. daca o adresa absoluta depaseste dimensiunea masinii, se va afisa un mesaj de eroare si se va folosi in locul acelei adrese cea mai mare valoare posibila  (care este 199). 
 Programul trebuie sa citeasca datele din intrarea standard (STDIN) si sa scrie rezultatele in iesirea standard (STDOUT). Pentru a citi din fisiere, respectiv pentru a scrie in fisiere se va redirecta intrare/iesirea standard. 
 
 Exemplu
