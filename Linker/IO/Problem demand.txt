@@ -1,0 +1,119 @@
+Linker
+Implementati un <linker> (link-editor) care functioneaza in doi pasi. 
+
+Masina tinta este adresabila la nivel de cuvant (word) si are o memorie formata din 200 de cuvinte. Cuvantul este format din 4 cifre zecimale. Prima cifra (cea din stanga) reprezinta op-codul operatiei, pe care linkerul nu o modifica. Celelalte 3 cifre cifre (numite campul adresa) reprezinta:
+
+un operand imediat, care ramane nemodificat. 
+o adresa absoluta (to be def.), care ramane nemodificata. 
+o adresa relativa, care trebuie relocata (to be def.).
+o adresa externa, care trebuie rezolvata (to be def.). 
+Inputul este format dintr-o serie de module obiect, fiecare din ele fiind formate din 3 parti: lista de definitii, lista de utilizari si textul programului. Inputul incepe cu o valoare numerica intreaga care reprezeinta numarul total de module. 
+
+
+
+Linkerul va procesa inputul de 2 ori. 
+
+Pasul 1: determina adresa de baza a fiecarui modul si adresa absoluta pentru fiecare simbol extern, stocand aceasta adresa absoluta in tabela de simboluri. Primul modul are adresa de baza 0; adresa de baza a modulului I+1 este egala cu adresa de baza a modulului I plus lungimea modulului I (lungimea unui modul este data de numarul de instructiuni din acel modul). Adresa absoluta a unui simbol S definit in modului M este egala cu adresa de baza a modulului M plus adresa relativa a simbolului S in cadrul modului M. 
+Pasul 2: Foloseste adresele de baza si tabela de simbolui determinate la pasul 1 pentru a genera outputul prin <relocarea adreselor relative> si prin <rezolvarea referintelor externe.> 
+Lista de definitii: incepe cu o valoare numerica ND (Numar Definitii) urmat de ND perechi (S,R) unde S este simbolul definit si R este adresa relativa a instructiuniii in care se defineste simbolul. La pasul 1 se va reloca R formand adresa absoluta A si se stocheaza perechea (S, A) in tabela de simboluri. 
+
+Lista de utilizari: incepe cu o valoare numerica NU (Numar Utilizari) urmat de NU perechi (S,R), unde S este un simbol extern folosit in modulul respectiv si R este adresa relativa a instructiunii din modulul respectiv care foloseste simbolul. Adresa initiala din R este un pointer la urmatoarea utilizare a simbolului S, rezultand astfel o lista inlantuita de utilizari, lista care se incheie cu pointerul a carui valoare este 777.
+
+Textul programului: incepe cu o valoare numerica NT (Numar de instrucTiuni) urmata de NT numere formate din 5 cifre, unde primele 4 cifre (de la stanga la dreapta) reprezinta instrctiunea iar ultima cifra (cea din dreapta) reprezinta tipul de adresa: 
+
+1 = valoare imediata (imm)
+2 = adresa absoluta
+3 = adresa relativa (trebuie relocata)
+4 = adresa externa (trebuie rezolvata)
+NT  = numarul de instructiuni din modul = lungimea modului. 
+
+Cerinte suplimentare:
+
+Programul trebuie sa verifice si situatii eronate cum ar fi:
+
+daca un simbol este definit dar nu este utilizat de nici un modul, se va afisa un mesaj de avertizare (warning) si se va continua procesul de link-editare. 
+daca un simbol este definit de mai multe ori, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv prima definitie 
+daca un simbol este utilizat dar nu este definit, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv valoare 0 (zero). 
+daca sunt mai multe simboluri utilizate de aceeasi instructiune, se va afisa un mesaj de eroare si se vor ignora toate utilizarile in afara de ultima. 
+daca o adresa ce apare in definitia unui simbol depaseste dimensiunea modulului, se va afisa un mesaj de eroare si se va folosi pentru simbolul respectiv adresa relativa 0 (zero). 
+daca o valoare imediata (de tip 1) apare intr-o lista de utilizare, se va afisa un mesaj de eroare si se va trata adresa ca o adresa externa (de tip 4). 
+daca o adrea externa nu este pe o lista de utilizare, se va afisa un mesaj de eroare si va fi tratata ca o adreas imediata. (!!!)
+daca o adresa absoluta depaseste dimensiunea masinii, se va afisa un mesaj de eroare si se va folosi in locul acelei adrese cea mai mare valoare posibila  (care este 199). 
+Programul trebuie sa citeasca datele din intrarea standard (STDIN) si sa scrie rezultatele in iesirea standard (STDOUT). Pentru a citi din fisiere, respectiv pentru a scrie in fisiere se va redirecta intrare/iesirea standard. 
+
+Exemplu
+
+4
+
+1 xy 2
+1 z 4
+5 10043 56781 27774 80023 70024
+
+0
+1 z 3
+6 80013 17774 10014 30024 10023 10102
+
+0
+1 z 1
+2 50013 47774
+
+1 z 2
+1 xy 2
+3 80002 17774 20014 
+
+
+
+Un exemplu de output detaliat pentru inputul de mai sus este:
+
+Symbol Table
+xy=2
+z=15
+
+
+Memory Map
++0
+0: 10043 1004+0 = 1004
+1: 56781 5678
+2: xy: 27774 ->z 2015
+3: 80023 8002+0 = 8002
+4: 70024 ->z 7015
++5
+0 80013 8001+5 = 8006
+1 17774 ->z 1015
+2 10014 ->z 1015
+3 30024 ->z 3015
+4 10023 1002+5 = 1007
+5 10102 1010
++11
+0 50013 5001+11= 5012
+1 47774 ->z 4015
++13
+0 80002 8000
+1 17774 ->xy 1002
+2 z: 20014 ->xy 2002
+
+
+
+Un alt exemplu de ouput simplificat pentru inputul de mai sus este:
+
+Symbol Table
+xy=2
+z=15
+
+Memory Map
+0:  1004
+1:  5678
+2:  2015
+3:  8002
+4:  7015
+5:  8006
+6:  1015
+7:  1015
+8:  3015
+9:  1007
+10: 1010
+11: 5012
+12: 4015
+13: 8000
+14: 1002
+15: 2002 
