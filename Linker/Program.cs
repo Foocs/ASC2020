@@ -6,13 +6,13 @@ namespace Linker
 {
     static class LinkerClass
     {
-        static string path = @"../../IO/input-1";
+        static string path = @"../../IO/input-6";
         static string file = File.ReadAllText(path);
 
         static string[] words = file.Split(new char[] { ' ', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-        //<key, (moduleIdx, absoluteAdress, used?, alreadyDefined?)>
-        static Dictionary<string, (int, int, bool, bool)> definedSymbols = new Dictionary<string, (int, int, bool, bool)>();
+        //<key, (moduleIdx, absoluteAdress, used?, alreadyDefined?, outsideModule?)>
+        static Dictionary<string, (int, int, bool, bool, bool)> definedSymbols = new Dictionary<string, (int, int, bool, bool, bool)>();
 
         static class firstStep
         {
@@ -25,11 +25,13 @@ namespace Linker
 
                 for (int moduleIdx = 0; moduleIdx < modulesCount; moduleIdx++)
                 {
-                    defineSymbols(moduleIdx);
+                    List<string> currentSymbolsInModule = new List<string>();
+
+                    defineSymbols(moduleIdx, currentSymbolsInModule);
 
                     iterateImports();
 
-                    iterateAddresses();
+                    iterateAddresses(currentSymbolsInModule);
                 }
 
                 printSymbolTable();
@@ -38,22 +40,33 @@ namespace Linker
             static void definitionAlreadyUsed(string symbol)
             {
                 int moduleIdx = definedSymbols[symbol].Item1;
-                int absoluteAdress = definedSymbols[symbol].Item2;
+                int absoluteAddress = definedSymbols[symbol].Item2;
+                bool used = definedSymbols[symbol].Item3;
+                bool alreadyDefined = true;
+                bool outsideModule = definedSymbols[symbol].Item5;
 
-                definedSymbols[symbol] = (moduleIdx, absoluteAdress, false, true);
+                //<key, (moduleIdx, absoluteAdress, used?, alreadyDefined?, outsideModule?)>
+                definedSymbols[symbol] = (moduleIdx, absoluteAddress, used, alreadyDefined, outsideModule);
             }
-            static void defineSymbols(int moduleIdx)
+
+            static void defineSymbols(int moduleIdx, List<string> currentSymbolsInModule)
             {
                 int definitionsCount = int.Parse(words[currentIndex++]);
 
                 for (int i = 0; i < definitionsCount; i++)
                 {
                     string symbol = words[currentIndex];
-                    int absoluteAdress = int.Parse(words[currentIndex + 1]) + absoluteIndex;
+                    int absoluteAddress = int.Parse(words[currentIndex + 1]) + absoluteIndex;
+
                     if (definedSymbols.ContainsKey(symbol))
                         definitionAlreadyUsed(symbol);
                     else
-                        definedSymbols.Add(symbol, (moduleIdx, absoluteAdress, false, false));
+                    {
+                        //<key, (moduleIdx, absoluteAdress, used?, alreadyDefined?, outsideModule)>
+                        definedSymbols.Add(symbol, (moduleIdx, absoluteAddress, false, false, false));
+
+                        currentSymbolsInModule.Add(symbol);
+                    }
 
                     currentIndex += 2;
                 }
@@ -67,9 +80,26 @@ namespace Linker
                     currentIndex += 2;
             }
 
-            static void iterateAddresses()
+            static void setRelativeAddress0(string symbol, int absoluteIndex)
+            {
+                int moduleIdx = definedSymbols[symbol].Item1;
+                int absoluteAddress = absoluteIndex;
+                bool used = definedSymbols[symbol].Item3;
+                bool alreadyDefined = definedSymbols[symbol].Item4;
+                bool outsideModule = true;
+
+                //<key, (moduleIdx, absoluteAdress, used?, alreadyDefined?, outsideModule?)>
+                definedSymbols[symbol] = (moduleIdx, absoluteAddress, used, alreadyDefined, outsideModule);
+            }
+
+            static void iterateAddresses(List<string> currentSymbolsInModule)
             {
                 int addressesCount = int.Parse(words[currentIndex++]);
+
+
+                foreach (var symbol in currentSymbolsInModule)
+                    if (definedSymbols[symbol].Item2 - absoluteIndex >= addressesCount)
+                        setRelativeAddress0(symbol, absoluteIndex);
 
                 absoluteIndex += addressesCount;
 
@@ -79,14 +109,19 @@ namespace Linker
 
             static string checkIfAlreadyDefined(bool alreadyDefined)
             {
-                return alreadyDefined ? "Error: This variable is multiply defined; first value used." : "";
+                return alreadyDefined ? " Error: This variable is multiply defined; first value used." : "";
+            }
+
+            static string checkIfOutsideModule(string symbol, bool outsideModule)
+            {
+                return outsideModule ? $" Error: The definition of {symbol} is outside module 1; zero (relative) used." : "";
             }
 
             static void printSymbolTable()
             {
                 Console.WriteLine("Symbol Table");
                 foreach (var symbol in definedSymbols)
-                    Console.WriteLine($"{symbol.Key}={symbol.Value.Item2} {checkIfAlreadyDefined(symbol.Value.Item4)}");
+                    Console.WriteLine($"{symbol.Key}={symbol.Value.Item2}{checkIfAlreadyDefined(symbol.Value.Item4)}{checkIfOutsideModule(symbol.Key, symbol.Value.Item5)}");
 
                 Console.WriteLine();
             }
@@ -113,11 +148,12 @@ namespace Linker
                     readImports(ref importedSymbols);
 
                     handleAddresses(importedSymbols);
-
                 }
-                Console.WriteLine();
 
                 checkUsedDefinitions();
+
+                Console.WriteLine();
+
             }
 
             static void iterateDefinitions()
@@ -132,8 +168,9 @@ namespace Linker
                 int moduleIdx = definedSymbols[symbol].Item1;
                 int absoluteAdress = definedSymbols[symbol].Item2;
                 bool alreadyDefined = definedSymbols[symbol].Item4;
+                bool outsideModule = definedSymbols[symbol].Item5;
 
-                definedSymbols[symbol] = (moduleIdx, absoluteAdress, true, alreadyDefined);
+                definedSymbols[symbol] = (moduleIdx, absoluteAdress, true, alreadyDefined, outsideModule);
             }
             static void readImports(ref Dictionary<string, (int, bool)> importedSymbols)
             {
@@ -189,8 +226,16 @@ namespace Linker
 
                     else if (typeOf(currentAddress) == '3')
                     {
-                        int newValue = getPointerAt(currentAddress) + absoluteIndex;
-                        currentAddress = string.Format($"{currentAddress[0]}{newValue:D3}");
+                        if (absoluteIndex < 200)
+                        {
+                            int newValue = getPointerAt(currentAddress) + absoluteIndex;
+                            currentAddress = string.Format($"{currentAddress[0]}{newValue:D3}");
+                        }
+                        else
+                        {
+                            int newValue = getPointerAt(currentAddress) + 199; // max nr. of addresses is 200
+                            currentAddress = string.Format($"{currentAddress[0]}{newValue:D3} Error: Absolute address over the address limit; used 199");
+                        }
                     }
 
                     else if (typeOf(currentAddress) == '4')
@@ -205,23 +250,34 @@ namespace Linker
 
             static void handleAddressType4(Dictionary<string, (int, bool)> importedSymbols, string[] addresses)
             {
+                // make a copy of the original array
+                string[] originalAddresses = new string[addresses.Length];
+                Array.Copy(addresses, originalAddresses, addresses.Length);
+
                 foreach (var importedSymbol in importedSymbols)
                 {
                     int pointer = importedSymbol.Value.Item1;
 
                     while (pointer != 777)
                     {
-                        int aux = getPointerAt(addresses[pointer]);
-                        char firstDigit = addresses[pointer][0];
+                        string aux = originalAddresses[pointer];
+                        char firstDigit = originalAddresses[pointer][0];
+                        int newAddress = definedSymbols[importedSymbol.Key].Item2;
 
-                        if (importedSymbol.Value.Item2) // if import is defined
-                        {
-                            int newAddress = definedSymbols[importedSymbol.Key].Item2;
-                            addresses[pointer] = string.Format($"{firstDigit}{newAddress:D3}");
-                        }
+                        // if not processed already
+                        if (addresses[pointer].Length == 5)
+                            if (importedSymbol.Value.Item2) // if import is defined
+                                addresses[pointer] = string.Format($"{firstDigit}{newAddress:D3}");
+                            else
+                                addresses[pointer] = string.Format($"{firstDigit}000 Error: {importedSymbol.Key} is not defined; zero used.");
+                        // if processed already
                         else
-                            addresses[pointer] = string.Format($"{firstDigit}000 Error: {importedSymbol.Key} is not defined; zero used.");
-                        pointer = aux;
+                            addresses[pointer] += " Error: Multiple symbols used by instruction; last used.";
+
+                        if (typeOf(aux) == '1')
+                            addresses[pointer] += " Error: Immediate address on use list; treated as External.";
+
+                        pointer = getPointerAt(aux);
                     }
                 }
             }
@@ -239,11 +295,10 @@ namespace Linker
 
             static void checkUsedDefinitions()
             {
+                Console.WriteLine();
                 foreach (var symbol in definedSymbols)
                     if (symbol.Value.Item3 == false)
                         Console.WriteLine($"Warning: {symbol.Key} was defined in module {symbol.Value.Item1} but never used.");
-
-                Console.WriteLine();
             }
 
         }
