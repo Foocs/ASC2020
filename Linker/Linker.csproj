@@ -53,22 +53,54 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="IO\input-1" />
-    <None Include="IO\input-2" />
-    <None Include="IO\input-3" />
-    <None Include="IO\input-4" />
-    <None Include="IO\input-5" />
-    <None Include="IO\input-6" />
-    <None Include="IO\input-7" />
-    <None Include="IO\input-8" />
-    <None Include="IO\output-1" />
-    <None Include="IO\output-2" />
-    <None Include="IO\output-3" />
-    <None Include="IO\output-4" />
-    <None Include="IO\output-5" />
-    <None Include="IO\output-6" />
-    <None Include="IO\output-7" />
-    <None Include="IO\output-8" />
+    <None Include="IO\input-1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\input-2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\input-3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\input-4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\input-5">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\input-6">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\input-7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\input-8">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\output-1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\output-2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\output-3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\output-4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\output-5">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\output-6">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\output-7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="IO\output-8">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -77,7 +109,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="IO\Problem demand.txt" />
+    <None Include="IO\Problem demand.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
