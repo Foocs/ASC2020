@@ -28,13 +28,12 @@ namespace Expression_evaluation
             if (op2 == '(' || op2 == ')')
                 return false;
 
-            if ((op1 == '*' || op1 == '/') && (op2 == '+' || op2 == '-'))
+            if ((op1 == '*' || op1 == '/' || op1 == '%') && (op2 == '+' || op2 == '-'))
                 return false;
 
             else
                 return true;
         }
-        
         static void checkParenthesis(string expression)
         {
             int sum = 0, valMax = 0;
@@ -67,6 +66,7 @@ namespace Expression_evaluation
                 {
                     if (nextIsOperator)
                         throw new FormatException("Invalid expression.");
+                    nextIsOperator = true;
 
                     string number = "" + expression[i++];
 
@@ -75,12 +75,15 @@ namespace Expression_evaluation
                     i--;
 
                     numbers.Push(int.Parse(number));
-
-                    nextIsOperator = true;
                 }
 
                 else if (expression[i] == '(')
+                {
+                    if (nextIsOperator)
+                        throw new FormatException("Invalid expression.");
+
                     operators.Push(expression[i]);
+                }
 
                 else if (expression[i] == ')')
                 {
@@ -93,12 +96,11 @@ namespace Expression_evaluation
                 {
                     if (!nextIsOperator)
                         throw new FormatException("Invalid expression.");
+                    nextIsOperator = false;
 
                     while (operators.Count > 0 && HasPrecedence(expression[i], operators.Peek()))
                         numbers.Push(operations[operators.Pop()](numbers.Pop(), numbers.Pop()));
                     operators.Push(expression[i]);
-
-                    nextIsOperator = false;
                 }
                 else
                     throw new FormatException("Invalid expression.");
