@@ -47,16 +47,16 @@ namespace Expression_evaluation
             }
 
             if (sum != 0)
-                throw new ArithmeticException("Invalid expression.");
+                throw new FormatException("Invalid expression.");
         }
         static int EvaluateExpression(this string expression)
         {
+            checkParenthesis(expression);
+
             Stack<int> numbers = new Stack<int>();
             Stack<char> operators = new Stack<char>();
 
             bool nextIsOperator = false;
-
-            checkParenthesis(expression);
 
             for (int i = 0; i < expression.Length; i++)
             {
@@ -66,7 +66,7 @@ namespace Expression_evaluation
                 else if (char.IsDigit(expression[i]) || ((expression[i] == '-' || expression[i] == '+') && i + 1 < expression.Length && char.IsDigit(expression[i + 1])))
                 {
                     if (nextIsOperator)
-                        throw new ArithmeticException("Invalid expression.");
+                        throw new FormatException("Invalid expression.");
 
                     string number = "" + expression[i++];
 
@@ -92,7 +92,7 @@ namespace Expression_evaluation
                 else if (expression[i].IsOperator())
                 {
                     if (!nextIsOperator)
-                        throw new ArithmeticException("Invalid expression.");
+                        throw new FormatException("Invalid expression.");
 
                     while (operators.Count > 0 && HasPrecedence(expression[i], operators.Peek()))
                         numbers.Push(operations[operators.Pop()](numbers.Pop(), numbers.Pop()));
@@ -100,6 +100,8 @@ namespace Expression_evaluation
 
                     nextIsOperator = false;
                 }
+                else
+                    throw new FormatException("Invalid expression.");
             }
 
             while (operators.Count > 0)
