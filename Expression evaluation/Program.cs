@@ -107,13 +107,18 @@ namespace Expression_evaluation
             }
 
             while (operators.Count > 0)
+            {
+                if (numbers.Count < 2)
+                    throw new FormatException("Invalid expression.");
+
                 numbers.Push(operations[operators.Pop()](numbers.Pop(), numbers.Pop()));
+            }
 
             return numbers.Pop();
         }
         static void Main(string[] args)
         {
-            string expression = "-5 - (3 - (4 / 2))";
+            string expression = "-5 - (3 - (4 / 2)/)+";
 
             Console.WriteLine(expression.EvaluateExpression());
         }
